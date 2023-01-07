@@ -24,6 +24,11 @@ before_action :authenticate_user!
 
   def edit
     @book = Book.find(params[:id])
+    if @book.user_id == current_user.id
+      render 'edit'
+    else
+      redirect_to books_path
+    end
   end
 
   def update
@@ -35,7 +40,7 @@ before_action :authenticate_user!
     end
   end
 
-  def destoy
+  def destroy
     @book = Book.find(params[:id])
     @book.destroy
     redirect_to books_path
@@ -46,12 +51,12 @@ before_action :authenticate_user!
   def book_params
     params.require(:book).permit(:title, :body)
   end
-  
+
   def ensure_correct_user
-      @book = Book.find(params[:id])     
+      @book = Book.find(params[:id])
     unless @book.user == current_user
       redirect_to books_path
     end
   end
-  
+
 end
